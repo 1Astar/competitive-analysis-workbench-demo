@@ -1,10 +1,11 @@
 {
   "app": "competitive_analysis_workspace_export",
-  "exportedAt": 1778314947087,
   "data": {
-    "v": 3,
-    "savedAt": 1778314947087,
-    "note": "公开演示数据 · 全部为虚构竞品，不含真实链接与业务字段",
+    "v": 4,
+    "savedAt": 1778400000000,
+    "activeTab": "competitive",
+    "idCounter": 6,
+    "note": "公开 Demo · 虚构竞品 · 预置分析结果",
     "products": [
       {
         "id": 1,
@@ -14,40 +15,30 @@
         "review_links": "https://example.com/reviews/alphabot",
         "image_url": "",
         "appearance": "产品尺寸：12 × 10 × 8 cm\n商品重量：420 g\n产品材质：主体 ABS；面部硅胶",
-        "structure": "",
+        "structure": "双轮差速底盘 + 头部 2DoF",
         "status": "done",
         "progress": 100,
         "open": true,
         "tags": ["教育向", "入门价位"],
         "functions": {
-          "自由对话": true,
-          "指令唤醒": true,
-          "情绪反馈": true,
-          "触摸互动": null,
-          "动作/表情": true,
-          "声音识别": true,
-          "声纹识别": null,
-          "声音刻录": null,
-          "语音切换": null,
-          "长期记忆": null,
-          "APP连接": true,
-          "联网能力": true,
-          "内容订阅": null,
-          "语音付费": null
+          "自由对话": true, "指令唤醒": true, "情绪反馈": true, "触摸互动": null,
+          "动作/表情": true, "声音识别": true, "声纹识别": null, "声音刻录": null,
+          "语音切换": null, "长期记忆": null, "APP连接": true, "联网能力": true,
+          "内容订阅": null, "语音付费": null
         },
         "ai_results": {
           "price": "¥299（演示）",
-          "core_function": "面向儿童的桌面陪伴机器人，支持基础对话、表情动作与 APP 远程控制。",
+          "core_function": "桌面陪伴机器人，支持基础对话、表情动作与 APP 远程控制，定位儿童 STEM 启蒙。",
           "material": "主体：ABS 工程塑料；面部：食品级硅胶",
           "comprehensive_type": "桌面陪伴机器人",
-          "analysis_type": "消费电子 · 演示样本",
-          "keywords": ["AlphaBot", "儿童陪伴", "编程启蒙"],
-          "sales": "演示数据，非真实销量",
-          "user_portrait": "6–12 岁儿童家长，关注 STEM 与亲子互动。",
+          "analysis_type": "消费电子 · Demo",
+          "keywords": "儿童陪伴, 编程启蒙, 桌面机器人",
+          "sales": "演示数据",
+          "user_portrait": "6–12 岁儿童家长，关注性价比与亲子互动。",
           "positive_reviews": "动作可爱；APP 上手快；价格友好。",
           "negative_reviews": "续航一般；户外场景不适用。",
           "potential_needs": "更长续航；离线基础功能；家长管控面板。",
-          "diff_highlights": "表情系统 + 轻量编程模块组合，定位入门档。"
+          "diff_highlights": "轻量编程模块 + 表情系统，入门档差异化明显。"
         }
       },
       {
@@ -64,42 +55,134 @@
         "open": false,
         "tags": ["仿生", "高价位"],
         "functions": {
-          "自由对话": null,
-          "指令唤醒": null,
-          "情绪反馈": true,
-          "触摸互动": true,
-          "动作/表情": true,
-          "声音识别": true,
-          "声纹识别": true,
-          "声音刻录": null,
-          "语音切换": null,
-          "长期记忆": true,
-          "APP连接": true,
-          "联网能力": null,
-          "内容订阅": null,
-          "语音付费": null
+          "自由对话": null, "指令唤醒": null, "情绪反馈": true, "触摸互动": true,
+          "动作/表情": true, "声音识别": true, "声纹识别": true, "声音刻录": null,
+          "语音切换": null, "长期记忆": true, "APP连接": true, "联网能力": null,
+          "内容订阅": null, "语音付费": null
         },
         "ai_results": {
           "price": "¥1,299（演示）",
           "core_function": "仿生宠物机器人，强调触摸反馈与长期行为学习。",
           "material": "外壳 ABS；关节 TPU；内骨架金属",
           "comprehensive_type": "仿生宠物机器人",
-          "analysis_type": "高端陪伴 · 演示样本",
-          "keywords": ["PetPal", "仿生", "触摸互动"],
+          "analysis_type": "高端陪伴 · Demo",
+          "keywords": "仿生宠物, 触摸互动, 行为学习",
           "sales": "演示数据",
           "user_portrait": "科技爱好者与礼品市场。",
           "positive_reviews": "动作拟真；触摸反馈自然。",
-          "negative_reviews": "价格偏高；维护成本需说明。",
-          "potential_needs": "模块化配件；健康监测；多宠物协同。",
+          "negative_reviews": "价格偏高；维护说明不够清晰。",
+          "potential_needs": "模块化配件；健康监测；多用户声纹。",
           "diff_highlights": "多传感器融合 + 长期记忆行为曲线。"
         }
       },
       {
         "id": 3,
+        "name": "Nurie Companion",
+        "platform": "DemoMart",
+        "link": "https://example.com/products/nurie",
+        "review_links": "https://example.com/social/nurie",
+        "image_url": "",
+        "appearance": "毛绒外壳可拆洗",
+        "structure": "",
+        "status": "done",
+        "progress": 100,
+        "open": false,
+        "tags": ["毛绒", "情绪陪伴"],
+        "functions": {
+          "自由对话": true, "指令唤醒": true, "情绪反馈": true, "触摸互动": true,
+          "动作/表情": true, "声音识别": true, "声纹识别": null, "声音刻录": true,
+          "语音切换": true, "长期记忆": true, "APP连接": true, "联网能力": true,
+          "内容订阅": true, "语音付费": null
+        },
+        "ai_results": {
+          "price": "¥899（演示）",
+          "core_function": "毛绒外形情感陪伴，支持声纹区分家庭成员与订阅故事内容。",
+          "material": "外层聚酯毛绒；内胆 ABS；语音模组硅胶包裹",
+          "comprehensive_type": "毛绒情感陪伴",
+          "analysis_type": "母婴 / 解压 · Demo",
+          "keywords": "毛绒, 声纹, 订阅内容",
+          "sales": "演示数据",
+          "user_portrait": "都市独居青年与有娃家庭。",
+          "positive_reviews": "触感治愈；故事内容丰富。",
+          "negative_reviews": "清洗后需重新配对；订阅费用不透明。",
+          "potential_needs": "开放第三方内容；本地离线故事包。",
+          "diff_highlights": "毛绒 + 声纹 + 订阅三角组合。"
+        }
+      },
+      {
+        "id": 4,
+        "name": "BoltPaw X1",
+        "platform": "DemoStore",
+        "link": "https://example.com/products/boltpaw-x1",
+        "review_links": "",
+        "image_url": "",
+        "appearance": "",
+        "structure": "四足步态 12DOF",
+        "status": "done",
+        "progress": 100,
+        "open": false,
+        "tags": ["四足", "可编程"],
+        "functions": {
+          "自由对话": null, "指令唤醒": true, "情绪反馈": null, "触摸互动": null,
+          "动作/表情": true, "声音识别": true, "声纹识别": null, "声音刻录": null,
+          "语音切换": null, "长期记忆": null, "APP连接": true, "联网能力": true,
+          "内容订阅": null, "语音付费": null
+        },
+        "ai_results": {
+          "price": "¥2,199（演示）",
+          "core_function": "四足机器狗，主打可编程动作与视觉避障演示。",
+          "material": "镁合金骨架；外壳 PC+ABS",
+          "comprehensive_type": "教育机器人 / 机器狗",
+          "analysis_type": "STEM 教具 · Demo",
+          "keywords": "四足, 编程, 机器狗",
+          "sales": "演示数据",
+          "user_portrait": "青少年创客与高校实验室。",
+          "positive_reviews": "步态稳定；SDK 文档完整。",
+          "negative_reviews": "噪音偏大；续航 40 分钟偏短。",
+          "potential_needs": "静音舵机；快换电池。",
+          "diff_highlights": "开放运动控制 API。"
+        }
+      },
+      {
+        "id": 5,
+        "name": "MochiBear",
+        "platform": "DemoMart · 社交种草",
+        "link": "https://example.com/products/mochibear",
+        "review_links": "https://example.com/social/mochibear",
+        "image_url": "",
+        "appearance": "坐姿 28cm 高",
+        "structure": "",
+        "status": "done",
+        "progress": 100,
+        "open": false,
+        "tags": ["萌系", "社交爆款"],
+        "functions": {
+          "自由对话": true, "指令唤醒": null, "情绪反馈": true, "触摸互动": true,
+          "动作/表情": true, "声音识别": null, "声纹识别": null, "声音刻录": null,
+          "语音切换": null, "长期记忆": null, "APP连接": null, "联网能力": null,
+          "内容订阅": null, "语音付费": null
+        },
+        "ai_results": {
+          "price": "¥199（演示）",
+          "core_function": "轻互动毛绒，靠扭动与简单语音反馈做情绪解压。",
+          "material": "短毛绒 + 内部塑料齿轮组",
+          "comprehensive_type": "解压互动玩偶",
+          "analysis_type": "种草驱动 · Demo",
+          "keywords": "萌系, 解压, 毛绒",
+          "sales": "演示数据（社交互动量高）",
+          "user_portrait": "18–30 岁女性用户为主。",
+          "positive_reviews": "颜值高；适合拍照分享。",
+          "negative_reviews": "功能深度有限；易被视为玩具而非智能设备。",
+          "potential_needs": "增加轻量 APP 日记；联名皮肤。",
+          "diff_highlights": "社交传播属性强于功能深度。"
+        }
+      },
+      {
+        "id": 6,
         "name": "EchoDino Lite",
         "platform": "DemoMart",
         "link": "https://example.com/products/echodino-lite",
-        "review_links": "https://example.com/social/echodino",
+        "review_links": "",
         "image_url": "",
         "appearance": "",
         "structure": "",
@@ -108,23 +191,33 @@
         "open": false,
         "tags": ["待分析"],
         "functions": {
-          "自由对话": null,
-          "指令唤醒": true,
-          "情绪反馈": null,
-          "触摸互动": null,
-          "动作/表情": true,
-          "声音识别": null,
-          "声纹识别": null,
-          "声音刻录": null,
-          "语音切换": null,
-          "长期记忆": null,
-          "APP连接": null,
-          "联网能力": null,
-          "内容订阅": null,
-          "语音付费": null
+          "自由对话": null, "指令唤醒": true, "情绪反馈": null, "触摸互动": null,
+          "动作/表情": true, "声音识别": null, "声纹识别": null, "声音刻录": null,
+          "语音切换": null, "长期记忆": null, "APP连接": null, "联网能力": null,
+          "内容订阅": null, "语音付费": null
         },
         "ai_results": {}
       }
-    ]
+    ],
+    "reportMarkdown": "## 调研报告摘要（Demo 预置）\n\n> 本段为脱敏演示文案，非生产 Prompt 生成结果。\n\n### 市场概览\n- 入门档（¥200–400）以桌面陪伴 + 轻编程为主；\n- 中高端（¥800+）强调仿生动作、声纹与长期记忆；\n- 毛绒解压类靠社交传播，功能深度普遍较浅。\n\n### 共性痛点\n续航焦虑、家长对内容可控性、价格与功能透明度。\n\n### 机会方向\n离线基础陪伴 + 家长仪表盘 + 模块化配件与开放内容订阅。\n\n### 功能矩阵结论\n对话 / 唤醒 / APP 在已完成样本中覆盖率较高；声纹与长期记忆是高端差异化关键。\n",
+    "needsResult": {
+      "overview": "Demo 预置需求洞察：基于 5 个已完成虚构竞品的聚合分析（非实时 AI 生成）。",
+      "pain_points": [
+        { "title": "续航与充电体验", "severity": "high", "desc": "用户频繁提及单次使用时长不足、户外场景受限。", "evidence": "AlphaBot Mini、BoltPaw X1 演示评价" },
+        { "title": "内容订阅边界不清", "severity": "medium", "desc": "硬件价格与内容付费打包说明模糊，引发信任顾虑。", "evidence": "Nurie Companion 演示评价" }
+      ],
+      "opportunities": [
+        { "title": "家长可控面板", "potential": "high", "desc": "统一管控使用时长、唤醒词与内容源。", "basis": "入门竞品普遍缺少完整家长端" },
+        { "title": "离线基础陪伴", "potential": "medium", "desc": "弱网/无网下仍可完成基础互动与故事播放。", "basis": "多条差评提及网络依赖" }
+      ],
+      "feature_priority": [
+        { "priority": "P0", "feature": "续航 + 快充", "reason": "跨价位共性痛点，影响日活与口碑。", "coverage": "5/5 已完成样本" },
+        { "priority": "P1", "feature": "声纹多用户", "reason": "高端差异化要素，家庭场景渗透关键。", "coverage": "2/5 已具备" }
+      ],
+      "diff_suggestions": [
+        { "direction": "入门档 + 家长管控", "desc": "在 ¥300 档补齐续航与家长面板，避免纯玩具定位。", "competitive_gap": "当前入门品家长端薄弱" }
+      ],
+      "conclusion": "演示结论：可控性、续航与内容透明度是穿透价位的三项核心诉求。"
+    }
   }
 }

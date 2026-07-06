@@ -48,8 +48,8 @@
 
 | 模块 | 演示仓库 | 完整版（未公开） |
 |------|----------|------------------|
-| 竞品工作台 & 筛选 | ✅ `demo/index.html` | 全量 Tab、批量 AI、IndexedDB |
-| Mock 工作区数据 | ✅ `demo/data/mock_workspace.json` | 真实项目工作区 |
+| 竞品工作台 & 筛选 | ✅ 完整 UI（`competitive_analysis` 脱敏部署） | 生产 Prompt / 爬虫 / IndexedDB 完整数据 |
+| Mock 工作区数据 | ✅ 6 条虚构竞品 + 报告/需求预置，打开即加载 | 真实项目工作区 |
 | 筛选文案清洗节选 | ✅ `demo/js/filter-utils.js` | 全链路清洗与导入规则 |
 | AI 调用 & Prompt | ❌ | 多模型、页面解析、成本统计 |
 | 爬虫 / MCP | ❌ | 淘宝列表、SellerSprite 等 |
@@ -69,15 +69,17 @@
 
 ## 项目截图
 
-> 截图为 **SVG 示意 + DEMO 水印**，非真实业务数据。可替换为自行录屏后上传 `assets/screenshots/*.png`。
+> 真实界面截图，已加 **DEMO 斜向水印 + 底部版权条**。界面中的商品名为演示样例，非对外公开的真实业务数据。
 
-| 工作台 | 材质筛选 |
+| 数据整理 · 导入与参考品筛选 | 立项风险评估 |
 |--------|----------|
-| ![工作台](assets/screenshots/01-workspace.svg) | ![筛选](assets/screenshots/02-filters.svg) |
+| ![数据整理](assets/screenshots/04-data-import.png) | ![立项风险评估](assets/screenshots/05-project-risk.png) |
 
-| 策略报告 |
+| 售后 / 退货分析 |
 |----------|
-| ![报告](assets/screenshots/03-report.svg) |
+| ![售后退货分析](assets/screenshots/06-returns-analysis.png) |
+
+重新生成水印图：`python scripts/watermark_screenshots.py`（需 Pillow，源图路径见脚本内 `SOURCES`）。
 
 ---
 
@@ -89,9 +91,28 @@
 
 ---
 
-## 快速开始
+## 在线 Demo（Vercel）
 
-### 方式 A：本地 HTTP（推荐，可加载 Mock JSON）
+本仓库已配置 **纯静态 Mock 部署**，无需环境变量、无 AI 调用、无数据库。
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/YOUR_USER/YOUR_REPO)
+
+> 将上方 URL 中的 `YOUR_USER/YOUR_REPO` 换成你的 GitHub 仓库地址后再使用按钮。
+
+| 项目 | 说明 |
+|------|------|
+| 部署目录 | `demo/`（见根目录 `vercel.json`） |
+| 环境变量 | **留空** |
+| 在线 Demo（Vercel） | 打开即见 **6 条竞品卡片**、筛选、调研报告 Markdown、需求分析预置、**导出 Excel/JSON** |
+| 密钥 | **零** — 勿在本 Demo 项目配置 API Key |
+
+详细步骤与安全说明：[docs/VERCEL_DEPLOY.md](docs/VERCEL_DEPLOY.md)
+
+---
+
+## 快速开始（本地）
+
+### 方式 A：本地 HTTP
 
 ```bash
 cd demo
@@ -99,13 +120,16 @@ python -m http.server 8765
 # 浏览器打开 http://localhost:8765/
 ```
 
-### 方式 B：直接打开 HTML
+### 方式 B：Vercel 本地预览
 
-双击 `demo/index.html` 可能因浏览器 CORS 策略无法 `fetch` JSON；若失败请用方式 A。
+```bash
+npm i -g vercel
+vercel dev
+```
 
 ### 导入数据
 
-点击 **「导入 Mock 数据」**，或手动将 `demo/data/mock_workspace.json` 作为完整版工作区的导入样本（字段结构兼容 v3 导出格式）。
+页面加载时自动注入 Mock（`js/demo-bootstrap.js`）；也可在浏览器控制台执行 `localStorage.removeItem('demo_public_seed_version')` 后刷新以重新载入示例数据。
 
 ---
 
@@ -128,16 +152,21 @@ python -m http.server 8765
 
 ```text
 github-public/
-├── README.md                 # 本文件
-├── LICENSE                   # 著作权声明（非开源许可）
-├── .gitignore
-├── demo/
-│   ├── index.html            # 可交互演示页
+├── vercel.json               # 静态部署 → demo/
+├── package.json
+├── .env.example              # 文档用，Demo 无需填写
+├── README.md
+├── LICENSE
+├── demo/                     # ← Vercel 对外站点根目录
+│   ├── index.html
 │   ├── data/mock_workspace.json
-│   └── js/filter-utils.js    # 筛选清洗节选
+│   ├── data/mock-embed.js    # 内置 Mock fallback
+│   └── js/filter-utils.js
 ├── docs/
-│   └── ARCHITECTURE.md       # 设计思路与模块边界
-└── assets/screenshots/       # 水印示意截图
+│   ├── ARCHITECTURE.md
+│   └── VERCEL_DEPLOY.md
+├── scripts/watermark_screenshots.py
+└── assets/screenshots/       # README 用水印截图
 ```
 
 ---
@@ -147,10 +176,12 @@ github-public/
 本仓库 **刻意不包含**：
 
 - 真实竞品名称、链接、销量、内部定价策略  
-- API Key、Cookie、MCP / 飞书 / 爬虫凭据  
+- API Key、Cookie、MCP / 飞书 / 爬虫凭据（**Vercel Demo 亦无需配置环境变量**）  
 - 完整 AI Prompt、评分权重、机会判断公式  
 - 生产用 `index.html`（约 2 万行）及三表 pipeline 源码  
 - 任何数据库或 IndexedDB 快照文件  
+
+**密钥管理原则（完整版参考）**：API Key / 模型 Key / 数据库连接仅放 Vercel **服务端**环境变量；勿使用 `NEXT_PUBLIC_` 暴露密钥；Vercel 项目仅授权可信账号。
 
 如需商用、二次开发或获取完整版，请联系著作权人另行授权。
 

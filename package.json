@@ -1,0 +1,7 @@
+{
+  "name": "competitive-analysis-workbench-demo",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Static mock demo for Vercel — no build step, no secrets",
+  "license": "UNLICENSED"
+}

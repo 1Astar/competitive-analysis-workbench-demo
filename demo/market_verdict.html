@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>市场判定 · 需求/阶段/蓝海分析</title>
+<script src="market_verdict.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;600&display=swap');
+:root {
+  --bg:#07080d;--surface:#0f1018;--surface2:#171825;--border:#22243a;--border2:#2e3050;
+  --accent:#818cf8;--accent2:#f472b6;--accent3:#34d399;--text:#e2e4f0;
+  --text-dim:#a0a8c0;--dim:#6b7280;--ok:#34d399;--warn:#fbbf24;--err:#f87171;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.app{max-width:960px;margin:0 auto;padding:20px 24px 60px}
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.brand h1{font-size:20px;font-weight:600;margin-bottom:4px}
+.brand p{font-size:12px;color:var(--dim);line-height:1.6;max-width:520px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{padding:8px 14px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);color:var(--text);font-size:12px;cursor:pointer;font-family:inherit;transition:all .15s}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#6366f1);border-color:transparent;color:#fff;font-weight:500}
+.btn-primary:hover{opacity:.92;color:#fff}
+.btn-primary:disabled{opacity:.45;cursor:not-allowed}
+.btn-ghost{background:transparent}
+.btn-success{background:rgba(52,211,153,.12);border-color:rgba(52,211,153,.35);color:var(--ok)}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px}
+.panel-title{font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:12px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:11px;color:var(--dim);margin-bottom:5px}
+.field input,.field textarea{width:100%;padding:9px 12px;background:var(--bg);border:1px solid var(--border2);border-radius:7px;color:var(--text);font-size:13px;font-family:inherit;line-height:1.5}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(129,140,248,.12)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.meta{font-size:11px;color:var(--dim);line-height:1.6}
+.meta.ok{color:var(--ok)}
+.meta.err{color:var(--err)}
+.log{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:11px;font-family:'Space Mono',monospace;color:var(--dim);max-height:120px;overflow-y:auto;margin-top:12px;display:none}
+.log.open{display:block}
+.section{margin-bottom:28px}
+.section-title{font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(129,140,248,.25),transparent)}
+.sig-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.sig-table th,.sig-table td{padding:8px 12px;border:1px solid var(--border);text-align:left;vertical-align:top}
+.sig-table th{background:var(--surface2);color:var(--text);font-weight:500}
+.motivation-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:8px}
+.empty{text-align:center;padding:48px 20px;color:var(--dim);font-size:13px}
+.framework{font-size:12px;color:var(--text-dim);line-height:1.85}
+.framework li{margin:4px 0}
+#importZone{border:1px dashed var(--border2);border-radius:8px;padding:20px;text-align:center;cursor:pointer;transition:border-color .15s}
+#importZone:hover{border-color:var(--accent)}
+#importZone.drag{border-color:var(--accent);background:rgba(129,140,248,.06)}
+#resultArea{margin-top:8px}
+.stat-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.stat-chip{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-size:11px}
+.stat-chip strong{color:var(--accent);font-family:'Space Mono',monospace}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand">
+      <h1>市场判定</h1>
+      <p>独立模块：真实需求 · 市场阶段 · 蓝海/红海/伪蓝海 · 购买动机拆分。<br>已并入主工作台「调研报告」生成流程（默认开启 📊 市场判定）；此页可用于单独导入 JSON 查看或重跑。</p>
+    </div>
+    <div class="actions">
+      <button class="btn btn-ghost" type="button" onclick="location.href='index.html'">← 返回工作台</button>
+      <button class="btn btn-ghost" type="button" id="btnCopyMd">复制 Markdown</button>
+      <button class="btn btn-success" type="button" id="btnExportJson">↓ 导出 JSON</button>
+      <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--dim);cursor:pointer">
+        <input type="checkbox" id="toggleWebSearch" checked style="accent-color:var(--accent)"> 🌐 联网补充
+      </label>
+      <button class="btn btn-primary" type="button" id="btnGenerate">⚡ 生成市场判定</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">判定框架（内置）</div>
+    <ul class="framework">
+      <li><strong>真实需求</strong>：有人痛、有人找、有人买 — 搜索 / 替代方案 / 痛点 / 付费 / 频率</li>
+      <li><strong>市场阶段</strong>：概念期 → 验证期 → 成长期 → 成熟期 → 衰退期</li>
+      <li><strong>竞争类型</strong>：蓝海 / 红海 / 伪蓝海（须回答「为什么没人做」）</li>
+      <li><strong>购买动机</strong>：陪伴 / 儿童 / 老人 / 桌面礼物 / 智控 / 宠物替代</li>
+      <li><strong>机会公式</strong>：需求强度 × 付费意愿 × 人群规模 × 方案不满 ÷ 获客难度</li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">① 导入数据</div>
+    <div id="importZone">
+      <div style="font-size:28px;margin-bottom:8px;opacity:.5">📂</div>
+      <div style="font-size:13px;color:var(--text);margin-bottom:4px">点击或拖拽导入工作区 JSON</div>
+      <div style="font-size:11px;color:var(--dim)">来自主工作台「↓ 导出 JSON」；需至少 2 个已完成分析的竞品</div>
+      <input type="file" id="fileInput" accept=".json,application/json" style="display:none">
+    </div>
+    <div id="importMeta" class="meta" style="margin-top:10px"></div>
+    <div id="statRow" class="stat-row" style="display:none"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">② 分析上下文（选填）</div>
+    <div class="grid2">
+      <div class="field">
+        <label>品类 / 方向</label>
+        <input type="text" id="inputCategory" placeholder="例：AI情感陪伴桌面宠物">
+      </div>
+      <div class="field">
+        <label>产品定位 & 目标用户</label>
+        <textarea id="inputPositioning" rows="2" placeholder="例：面向独居青年的情绪陪伴硬件"></textarea>
+      </div>
+      <div class="field">
+        <label>已有调研结论</label>
+        <textarea id="inputResearch" rows="2" placeholder="例：用户最在意陪伴感，对续费敏感"></textarea>
+      </div>
+      <div class="field">
+        <label>希望突破的方向</label>
+        <textarea id="inputFocus" rows="2" placeholder="例：长期记忆 + 声音个性化"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div id="logEl" class="log"></div>
+
+  <div id="resultArea">
+    <div class="empty" id="emptyHint">
+      <div style="font-size:36px;margin-bottom:12px;opacity:.35">📊</div>
+      <p>导入工作区 JSON 后，点击「生成市场判定」</p>
+    </div>
+    <div id="resultContent" style="display:none"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var MV = window.MarketVerdict;
+  MV.loadState();
+
+  var els = {
+    fileInput: document.getElementById('fileInput'),
+    importZone: document.getElementById('importZone'),
+    importMeta: document.getElementById('importMeta'),
+    statRow: document.getElementById('statRow'),
+    log: document.getElementById('logEl'),
+    emptyHint: document.getElementById('emptyHint'),
+    resultContent: document.getElementById('resultContent'),
+    btnGenerate: document.getElementById('btnGenerate'),
+    btnCopyMd: document.getElementById('btnCopyMd'),
+    btnExportJson: document.getElementById('btnExportJson')
+  };
+
+  function log(msg, type) {
+    els.log.classList.add('open');
+    var line = document.createElement('div');
+    line.style.color = type === 'err' ? 'var(--err)' : type === 'ok' ? 'var(--ok)' : 'var(--dim)';
+    line.textContent = '[' + new Date().toTimeString().slice(0, 8) + '] ' + msg;
+    els.log.appendChild(line);
+    els.log.scrollTop = els.log.scrollHeight;
+  }
+
+  function readBackground() {
+    return {
+      positioning: document.getElementById('inputPositioning').value.trim(),
+      research: document.getElementById('inputResearch').value.trim(),
+      strengths: '',
+      focus: document.getElementById('inputFocus').value.trim()
+    };
+  }
+
+  function syncFormFromState() {
+    var st = MV.getState();
+    document.getElementById('inputCategory').value = st.category || '';
+    if (st.background) {
+      document.getElementById('inputPositioning').value = st.background.positioning || '';
+      document.getElementById('inputResearch').value = st.background.research || '';
+      document.getElementById('inputFocus').value = st.background.focus || '';
+    }
+    if (st.verdict) renderResult(st.verdict, st.stats);
+  }
+
+  function renderImportMeta(stats) {
+    if (!stats) {
+      els.importMeta.textContent = '尚未导入数据';
+      els.statRow.style.display = 'none';
+      return;
+    }
+    els.importMeta.innerHTML = '<span class="ok">✓ 已加载工作区 · 已完成竞品 ' + stats.doneCount + ' 款（在售 ' + stats.activeCount + ' / 历史 ' + stats.historicalCount + '）</span>';
+    els.statRow.style.display = 'flex';
+    var chips = [
+      ['在售样本', stats.activeCount],
+      ['历史样本', stats.historicalCount],
+      ['功能矩阵', stats.matrix ? stats.matrix.n + ' 款基数' : '—']
+    ];
+    Object.keys(stats.motivations || {}).forEach(function (k) {
+      var m = stats.motivations[k];
+      if (m.hits > 0) chips.push([m.label.replace(/\/.*$/, ''), m.hits + ' 款提及']);
+    });
+    els.statRow.innerHTML = chips.slice(0, 8).map(function (c) {
+      return '<div class="stat-chip">' + c[0] + ' <strong>' + c[1] + '</strong></div>';
+    }).join('');
+  }
+
+  function renderResult(verdict, stats) {
+    els.emptyHint.style.display = 'none';
+    els.resultContent.style.display = 'block';
+    var ws = MV.getState().workspace || null;
+    els.resultContent.innerHTML = '<div style="margin-bottom:12px"><h2 style="font-size:18px;font-weight:600">' + MV.esc(verdict.title || '市场判定报告') + '</h2></div>'
+      + MV.renderVerdict(verdict, stats, ws);
+  }
+
+  function handleFile(file) {
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      try {
+        var json = JSON.parse(reader.result);
+        var stats = MV.importWorkspace(json);
+        renderImportMeta(stats);
+        log('已导入：' + stats.doneCount + ' 个已完成竞品', 'ok');
+        if (json.fields) {
+          document.getElementById('inputPositioning').value = (json.fields.bgPositioning || '');
+          document.getElementById('inputResearch').value = (json.fields.bgResearch || '');
+          document.getElementById('inputFocus').value = (json.fields.bgFocus || '');
+        }
+      } catch (e) {
+        log('导入失败：' + e.message, 'err');
+        alert('导入失败：' + e.message);
+      }
+    };
+    reader.readAsText(file, 'UTF-8');
+  }
+
+  els.importZone.addEventListener('click', function () { els.fileInput.click(); });
+  els.fileInput.addEventListener('change', function () {
+    if (els.fileInput.files[0]) handleFile(els.fileInput.files[0]);
+  });
+  els.importZone.addEventListener('dragover', function (e) { e.preventDefault(); els.importZone.classList.add('drag'); });
+  els.importZone.addEventListener('dragleave', function () { els.importZone.classList.remove('drag'); });
+  els.importZone.addEventListener('drop', function (e) {
+    e.preventDefault();
+    els.importZone.classList.remove('drag');
+    if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+
+  ['inputCategory', 'inputPositioning', 'inputResearch', 'inputFocus'].forEach(function (id) {
+    document.getElementById(id).addEventListener('change', function () {
+      MV.setState({
+        category: document.getElementById('inputCategory').value.trim(),
+        background: readBackground()
+      });
+    });
+  });
+
+  els.btnGenerate.addEventListener('click', async function () {
+    if (!MV.getCfg()) {
+      alert('请先在主工作台（index.html）配置 AI Provider，本页共用同一配置。');
+      return;
+    }
+    MV.setState({
+      category: document.getElementById('inputCategory').value.trim(),
+      background: readBackground()
+    });
+    els.btnGenerate.disabled = true;
+    els.btnGenerate.textContent = '分析中…';
+    log('开始生成市场判定…');
+    try {
+      var res = await MV.generateVerdict({
+        category: document.getElementById('inputCategory').value.trim(),
+        background: readBackground(),
+        webSearch: document.getElementById('toggleWebSearch').checked
+      });
+      renderResult(res.verdict, res.stats);
+      log('市场判定生成完成 ✓', 'ok');
+    } catch (e) {
+      log('失败：' + e.message, 'err');
+      alert(e.message);
+    }
+    els.btnGenerate.disabled = false;
+    els.btnGenerate.textContent = '⚡ 生成市场判定';
+  });
+
+  els.btnCopyMd.addEventListener('click', function () {
+    var st = MV.getState();
+    if (!st.verdict) { alert('请先生成判定'); return; }
+    var md = MV.buildMarkdown(st.verdict, st.stats);
+    navigator.clipboard.writeText(md).then(function () { log('Markdown 已复制', 'ok'); });
+  });
+
+  els.btnExportJson.addEventListener('click', function () {
+    var st = MV.getState();
+    if (!st.verdict) { alert('请先生成判定'); return; }
+    var blob = new Blob([JSON.stringify({ verdict: st.verdict, stats: st.stats, exportedAt: Date.now() }, null, 2)], { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = '市场判定_' + new Date().toISOString().slice(0, 10) + '.json';
+    a.click();
+    log('JSON 已导出', 'ok');
+  });
+
+  if (!MV.getCfg()) {
+    log('⚠ 未检测到 AI 配置，请先在 index.html 配置 Provider', 'err');
+  }
+
+  syncFormFromState();
+  if (MV.getState().stats) renderImportMeta(MV.getState().stats);
+})();
+</script>
+</body>
+</html>

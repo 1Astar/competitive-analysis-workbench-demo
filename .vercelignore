@@ -1,0 +1,5 @@
+scripts/
+private/
+*.local
+.env
+.env.*
