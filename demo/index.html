@@ -250,8 +250,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 @media(max-width:560px){.fgrid{grid-template-columns:1fr;}.topbar{flex-direction:column;align-items:flex-start;}}
 </style>
 <style>
+.demo-path{padding:8px 20px 12px;font-size:12px;line-height:1.65;color:var(--text-dim);background:var(--surface2);border-top:1px solid var(--border)}
+.demo-path strong{color:var(--accent);font-weight:600}
+.demo-path-steps{color:var(--text-dim)}
 .demo-banner.demo-banner-collapsed .demo-highlights{display:none}
-.demo-banner.demo-banner-collapsed .demo-intro{padding-bottom:10px;font-size:12px;line-height:1.55}
+.demo-banner.demo-banner-collapsed .demo-path{padding:6px 20px 10px;font-size:11px}
 .demo-intro{background:linear-gradient(90deg,rgba(129,140,248,.12),rgba(52,211,153,.06));padding:12px 20px;font-size:13px;line-height:1.75;color:var(--text-dim);max-width:100%}
 .demo-intro strong{color:var(--accent)}
 .demo-highlights{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px 20px;padding:10px 20px 12px;background:var(--surface2);font-size:12px;line-height:1.65;color:var(--text-dim)}
@@ -265,6 +268,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 <div class="app">
 <div id="demoBanner" class="demo-banner">
 <div class="demo-intro">这是一个用于<strong>产品调研与竞品分析</strong>的工作台 Demo。打开页面即加载 <strong>6 条虚构竞品</strong>（含分析结果），可体验筛选、对比、评论/需求洞察、调研报告浏览，以及 <strong>导出 Excel / Markdown</strong>。本版本为<strong>脱敏公开演示</strong>，不含真实业务数据与 API 调用。</div>
+<p class="demo-path" aria-label="建议体验路径"><strong>建议体验路径：</strong><span class="demo-path-steps">查看示例竞品 → 筛选对比 → 查看评论/需求洞察 → 查看调研报告 → 导出结果</span></p>
 <section class="demo-highlights" aria-label="项目亮点">
   <h2>项目亮点</h2>
   <ul>
