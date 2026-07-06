@@ -258,7 +258,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .demo-highlights h2{font-size:11px;font-family:'Space Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;grid-column:1/-1}
 .demo-highlights ul{margin:0;padding-left:1.1em}
 .demo-highlights li{margin:4px 0}
-.demo-public-hidden{display:none!important}
 .demo-ai-hint{margin:0 0 12px;padding:10px 12px;border-radius:8px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.28);color:var(--warn);font-size:12px;line-height:1.65}
 </style>
 </head>
@@ -519,34 +518,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       </div>
     </div>
 
-    <!-- 一键爬虫 · 淘宝搜索（本机 Playwright） -->
-    <div style="background:var(--surface2);border:1px solid var(--border2);border-radius:12px;padding:18px;margin-bottom:16px">
-      <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--warn);margin-bottom:10px;display:flex;align-items:center;gap:8px">
-        🕷 一键爬虫 · 淘宝（本机）
-        <span style="flex:1;height:1px;background:linear-gradient(90deg,rgba(251,191,36,.35),transparent)"></span>
-      </div>
-      <p style="font-size:11px;color:var(--dim);line-height:1.65;margin-bottom:10px">⚠ 浏览器<strong>不能直接运行</strong> Python：「一键爬虫」需复制命令到 CMD，或用 <a href="../爬虫/README.md" target="_blank" rel="noopener" style="color:var(--accent)">竞品分析工具/爬虫</a> 里的 <code style="font-size:10px">启动爬虫.bat</code>。</p>
-      <p style="font-size:11px;color:var(--dim);line-height:1.65;margin-bottom:10px">点<strong>「导入并整理 Excel」</strong>：可<strong>多次上传</strong>或一次选多个 xlsx；待导入列表里已有数据时，弹窗里请选<strong>「追加到现有列表」</strong>（已有数据时会默认勾选）。</p>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:10px">
-        <div class="field"><label style="font-size:11px">脚本目录（含 crawl_taobao_search.py）</label><input type="text" id="tbCrawlDir" placeholder="例：E:\文档\star\工具\竞品分析工具\爬虫\taobao" onblur="tbSaveCrawlDir()" onfocus="tbLoadCrawlDirOnce(this)" oninput="tbRefreshTaobaoCmdPreview()" style="width:100%;padding:6px 8px;font-size:11px;background:var(--bg);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'Space Mono',monospace"></div>
-        <div class="field"><label style="font-size:11px">检索词</label><input type="text" id="tbCrawlKw" placeholder="如：边桌" onfocus="tbLoadCrawlKeywordOnce(this)" onblur="tbSaveCrawlKeyword()" oninput="tbRefreshTaobaoCmdPreview()" style="width:100%;padding:6px 8px;font-size:11px;background:var(--bg);border:1px solid var(--border2);border-radius:6px;color:var(--text)"></div>
-        <div class="field"><label style="font-size:11px">起始页</label><input type="number" id="tbCrawlStart" value="1" min="1" oninput="tbRefreshTaobaoCmdPreview()" style="width:100%;padding:6px 8px;font-size:11px;background:var(--bg);border:1px solid var(--border2);border-radius:6px;color:var(--text)"></div>
-        <div class="field"><label style="font-size:11px">终止页（含）</label><input type="number" id="tbCrawlEnd" value="2" min="1" oninput="tbRefreshTaobaoCmdPreview()" style="width:100%;padding:6px 8px;font-size:11px;background:var(--bg);border:1px solid var(--border2);border-radius:6px;color:var(--text)"></div>
-        <div class="field full" style="grid-column:1/-1"><label style="font-size:11px">导出路径（相对脚本目录）</label><input type="text" id="tbCrawlOut" value="out/淘宝搜索.xlsx" oninput="tbRefreshTaobaoCmdPreview()" style="width:100%;padding:6px 8px;font-size:11px;background:var(--bg);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'Space Mono',monospace"></div>
-      </div>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px">
-        <button type="button" class="btn btn-warn" onclick="itOpenOneClickCrawlWizard()" style="font-weight:700;padding:8px 16px">一键爬虫</button>
-        <button type="button" class="btn btn-ghost btn-sm" onclick="itCopyTaobaoCrawlCmd()">仅复制命令</button>
-        <button type="button" class="btn btn-ghost btn-sm" onclick="itDownloadTaobaoCrawlBat()">下载 run_taobao.bat</button>
-        <label class="btn btn-primary btn-sm" style="cursor:pointer;margin:0" title="可多次点击上传；支持一次选多个 Excel">导入并整理 Excel<input type="file" id="tbCrawlFileXlsx" accept=".xlsx,.xls" multiple style="display:none" onchange="itImportTaobaoCrawlFiles(this.files);this.value=''"></label>
-        <button type="button" class="btn btn-success btn-sm" onclick="itMergeToDataAnalysisPipeline()" title="将下方待导入列表中已勾选行写入「数据分析」Unified，再映射导出三份模板">→ 合并到数据分析（三表）</button>
-        <a class="btn btn-warn btn-sm" href="../爬虫/启动爬虫.bat" title="打开独立爬虫 GUI（需先运行安装环境.bat）">打开独立爬虫</a>
-        <a class="btn btn-ghost btn-sm" href="../爬虫/README.md" target="_blank" rel="noopener">爬虫说明</a>
-        <a class="btn btn-ghost btn-sm" href="scripts/CRAWLER_REFERENCES.md" target="_blank" rel="noopener">爬虫参考</a>
-      </div>
-      <textarea id="tbCrawlCmdPreview" readonly rows="3" style="width:100%;margin-top:6px;padding:8px;font-size:10px;font-family:'Space Mono',monospace;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--dim);resize:vertical"></textarea>
-    </div>
-
     <!-- 待导入竞品列表 -->
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px">
       <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent3);margin-bottom:14px;display:flex;align-items:center;gap:8px">
@@ -622,21 +593,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     </div>
   </div>
 </div><!-- /tab-import -->
-
-<div class="overlay" id="modalItCrawlPipeline">
-  <div class="modal" style="max-width:520px">
-    <div class="modal-header">
-      <h3>📋 爬虫数据整理</h3>
-      <button class="modal-close" onclick="closeModal('modalItCrawlPipeline')">✕</button>
-    </div>
-    <div class="modal-body" id="itCrawlPipelineBody" style="font-size:12px;line-height:1.65;color:var(--text)">
-      <p style="color:var(--dim)">等待开始…</p>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-ghost btn-sm" onclick="closeModal('modalItCrawlPipeline')">关闭</button>
-    </div>
-  </div>
-</div>
 
 <div class="overlay" id="modalItNotCompetitor">
   <div class="modal" style="max-width:480px">
@@ -1151,51 +1107,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <div class="modal-actions">
       <button class="btn btn-ghost" id="closeSplitBtn">取消</button>
       <button class="btn btn-primary" id="btnDoSplit">⚡ AI 拆分</button>
-    </div>
-  </div>
-</div>
-
-<!-- ====== MODAL: 一键爬虫向导 ====== -->
-<div class="overlay" id="modalOneClickCrawl">
-  <div class="modal" style="max-width:540px">
-    <button type="button" class="modal-close" onclick="closeModal('modalOneClickCrawl')">✕</button>
-    <h2>一键爬虫向导</h2>
-    <p style="font-size:11px;color:var(--dim);line-height:1.7;margin-bottom:12px"><strong>多站点适配</strong>：各站登录、反爬、列表结构不同，无法在同一支 Playwright 脚本里「扫全网」。此处仅对<strong>淘宝/天猫搜索列表</strong>生成可运行命令；京东 / Amazon / 小红书 / 抖音等请用向导内指引（导出、MediaCrawler 或 BI）。</p>
-    <div class="field" style="margin-bottom:10px">
-      <label for="occSite">站点</label>
-      <select id="occSite" style="width:100%;padding:8px 10px;font-size:12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text)">
-        <option value="taobao">淘宝 · 搜索列表（本仓库 crawl_taobao_search.py）</option>
-        <option value="tmall">天猫 · 搜索列表（需在本机脚本内改搜索域名/URL，命令模板同淘宝）</option>
-        <option value="jd">京东 · 未内置（建议官方/插件导出或自建脚本）</option>
-        <option value="amazon">Amazon · 未内置列表爬虫（类目近12月 Top100 → 卖家精灵 / Keepa / BI 导出后走「数据分析」）</option>
-        <option value="xhs">小红书 · 请用 MediaCrawler 单独跑数后导入</option>
-        <option value="douyin">抖音 · 请用 MediaCrawler 单独跑数后导入</option>
-      </select>
-    </div>
-    <div class="field" style="margin-bottom:10px">
-      <label for="occKw">检索词</label>
-      <input type="text" id="occKw" placeholder="如：边桌、手持吸尘器" maxlength="120" style="width:100%;padding:8px 10px;font-size:12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text)">
-    </div>
-    <div class="field" style="margin-bottom:10px">
-      <label for="occCap">搜索列表样本量目标（约多少条商品卡片，用于估算翻页）</label>
-      <input type="number" id="occCap" value="100" min="20" max="480" step="10" style="width:100%;padding:8px 10px;font-size:12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text)">
-    </div>
-    <label style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:var(--text);cursor:pointer;margin-bottom:8px;line-height:1.55">
-      <input type="checkbox" id="occWantBizTop100" style="margin-top:3px;accent-color:var(--accent)" onchange="var h=document.getElementById('occBizHint');if(h)h.style.display=this.checked?'block':'none'">
-      <span>我的目标是「<strong>类目内销量 Top100</strong>」且关注「<strong>近 12 个月</strong>」口径（与公开搜索列表不是同一数据源）</span>
-    </label>
-    <div id="occBizHint" style="display:none;font-size:11px;color:var(--warn);line-height:1.65;padding:10px 12px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.25);border-radius:8px;margin-bottom:10px">
-      卖家精灵、内部 BI、Keepa 等提供的「小类近12月销量 Top100」通常<strong>无法在淘宝搜索页直接稳定爬全</strong>。勾选此项后，工具只会按上面的<strong>样本量</strong>多翻几页搜索列表作<strong>补充样本</strong>；正式 Top100 表仍请以数据方导出为准，再进「数据分析」合并。
-    </div>
-    <div class="field" style="margin-bottom:8px">
-      <label for="occCatOut">根据检索词推测类目（可选，AI 仅供参考）</label>
-      <textarea id="occCatOut" rows="4" readonly placeholder="点下方按钮后，JSON 会出现在此" style="width:100%;font-size:11px;font-family:'Space Mono',monospace"></textarea>
-    </div>
-    <button type="button" class="btn btn-ghost btn-sm" style="margin-bottom:10px" onclick="tbWizardGuessCategory()">根据检索词推测类目（AI）</button>
-    <div id="occOffsiteHint" style="display:none;margin-bottom:12px"></div>
-    <div class="modal-actions" style="margin-top:6px">
-      <button type="button" class="btn btn-ghost" onclick="closeModal('modalOneClickCrawl')">取消</button>
-      <button type="button" class="btn btn-primary" onclick="itApplyOneClickCrawlWizard()">确认并复制终端命令 / 查看指引</button>
     </div>
   </div>
 </div>
@@ -6277,14 +6188,6 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
       if (window.MarketDataReport && typeof MarketDataReport.refresh === 'function') {
         MarketDataReport.refresh('cleaning', 'itMarketReportRoot');
       }
-      setTimeout(function () {
-        try {
-          var dirEl = document.getElementById('tbCrawlDir');
-          if (dirEl && !String(dirEl.value || '').trim()) tbLoadCrawlDirOnce(dirEl);
-          tbPrefillKeywordFromSaved();
-          tbRefreshTaobaoCmdPreview();
-        } catch (e) {}
-      }, 0);
     }
     setTimeout(adjustHeaderOffset, 10);
   });
@@ -15043,11 +14946,9 @@ async function itHandleProductFile(file){
       const s = String(h || '').toLowerCase();
       return /title--|realsales--|shopnametext|mainimg--/i.test(s);
     });
-    if (isCrawlFormat && typeof itImportTaobaoCrawlXlsx === 'function') {
-      if (confirm('检测到淘宝爬虫 / Instant Data Scraper 格式。\n\n推荐使用「导入并整理」流水线（解析 → 合并同款 → 写入待导入）。\n\n确定 = 走整理流水线\n取消 = 改用手动字段映射')) {
-        await itImportTaobaoCrawlXlsx(file);
-        return;
-      }
+    if (isCrawlFormat) {
+      log('公开 Demo 不支持爬虫 Excel 导入，请使用 Mock 数据或手动映射', 'warn');
+      return;
     }
     _itPH=headers; _itPR=rows;
     document.getElementById('itProductFileInfo').innerHTML=`<div style="font-size:11px;color:var(--ok);margin:6px 0">✓ ${esc(file.name)}（${_itPR.length} 行）</div>`;
@@ -15118,231 +15019,24 @@ function itImportProduct(){
   itRenderList();
 }
 
-var _TB_CRAWL_LS = 'taobao_crawl_script_dir_v1';
-var _TB_CRAWL_KW_LS = 'taobao_crawl_keyword_v1';
-function tbSaveCrawlKeyword() {
-  var el = document.getElementById('tbCrawlKw');
-  if (!el) return;
-  var v = String(el.value || '').trim();
-  try {
-    if (v) localStorage.setItem(_TB_CRAWL_KW_LS, v);
-  } catch (e) {}
-}
-function tbLoadCrawlKeywordOnce(inp) {
-  if (!inp || String(inp.value || '').trim()) return;
-  try {
-    var s = localStorage.getItem(_TB_CRAWL_KW_LS);
-    if (s) inp.value = s;
-  } catch (e) {}
-}
-/** 检索词为空时，填入本卡上次保存的检索词（仅数据整理，不读数据分析） */
-function tbPrefillKeywordFromSaved() {
-  var kwEl = document.getElementById('tbCrawlKw');
-  if (!kwEl || String(kwEl.value || '').trim()) return;
-  try {
-    var s = localStorage.getItem(_TB_CRAWL_KW_LS);
-    if (s) kwEl.value = s;
-  } catch (e) {}
-}
-function tbLoadCrawlDirOnce(inp) {
-  if (!inp || inp.value.trim()) return;
-  try {
-    var s = localStorage.getItem(_TB_CRAWL_LS);
-    if (s) inp.value = s;
-  } catch (e) {}
-}
-function tbSaveCrawlDir() {
-  var el = document.getElementById('tbCrawlDir');
-  if (!el) return;
-  try { localStorage.setItem(_TB_CRAWL_LS, el.value.trim()); } catch (e) {}
-}
-function itBuildTaobaoCrawlCmd() {
-  var dirRaw = (document.getElementById('tbCrawlDir') && document.getElementById('tbCrawlDir').value || '').trim().replace(/"/g, '');
-  var kw = (document.getElementById('tbCrawlKw') && document.getElementById('tbCrawlKw').value || '').trim();
-  var sp = parseInt(document.getElementById('tbCrawlStart') && document.getElementById('tbCrawlStart').value, 10) || 1;
-  var ep = parseInt(document.getElementById('tbCrawlEnd') && document.getElementById('tbCrawlEnd').value, 10) || 1;
-  var out = (document.getElementById('tbCrawlOut') && document.getElementById('tbCrawlOut').value || 'out/淘宝搜索.xlsx').trim().replace(/"/g, '');
-  if (!dirRaw) return 'REM 请先填写「脚本目录」';
-  var kwEsc = kw.replace(/"/g, '');
-  return 'cd /d "' + dirRaw + '"\r\npython crawl_taobao_search.py --keyword "' + kwEsc + '" --start-page ' + sp + ' --end-page ' + ep + ' --config selectors.yaml --out "' + out + '"';
-}
-function tbRefreshTaobaoCmdPreview() {
-  var ta = document.getElementById('tbCrawlCmdPreview');
-  if (ta) ta.value = itBuildTaobaoCrawlCmd();
-}
-/**
- * 一键爬虫：不弹窗；检索词用本卡或上次在本卡保存的词 → 复制终端命令。
- */
-function itOneClickTaobaoCrawl() {
-  var dirEl = document.getElementById('tbCrawlDir');
-  if (dirEl && !String(dirEl.value || '').trim()) tbLoadCrawlDirOnce(dirEl);
-  tbPrefillKeywordFromSaved();
-  tbRefreshTaobaoCmdPreview();
-  var dirRaw = dirEl && String(dirEl.value || '').trim();
-  if (!dirRaw) {
-    log('一键爬虫：请先在本卡填写「脚本目录」一次，之后会记住', 'warn');
-    if (dirEl) dirEl.focus();
-    return;
-  }
-  var kwEl = document.getElementById('tbCrawlKw');
-  var kw = kwEl && String(kwEl.value || '').trim();
-  if (!kw) {
-    log('一键爬虫：请在本卡填写「检索词」一次，之后会记住', 'warn');
-    if (kwEl) kwEl.focus();
-    return;
-  }
-  itCopyTaobaoCrawlCmd();
-}
-
-function itOpenOneClickCrawlWizard() {
-  var oh = document.getElementById('occOffsiteHint');
-  if (oh) {
-    oh.style.display = 'none';
-    oh.innerHTML = '';
-  }
-  var w = document.getElementById('occKw');
-  var tb = document.getElementById('tbCrawlKw');
-  if (tb && !String(tb.value || '').trim()) tbPrefillKeywordFromSaved();
-  if (w && tb && !String(w.value || '').trim()) w.value = String(tb.value || '').trim();
-  openModal('modalOneClickCrawl');
-}
-
-function itApplyOneClickCrawlWizard() {
-  var site = (document.getElementById('occSite') && document.getElementById('occSite').value) || 'taobao';
-  var kw = (document.getElementById('occKw') && document.getElementById('occKw').value || '').trim();
-  var oh = document.getElementById('occOffsiteHint');
-  if (oh) {
-    oh.style.display = 'none';
-    oh.innerHTML = '';
-  }
-  if (!kw) {
-    log('向导：请填写检索词', 'warn');
-    var okw = document.getElementById('occKw');
-    if (okw) okw.focus();
-    return;
-  }
-  if (site !== 'taobao' && site !== 'tmall') {
-    var linkRef = '<a href="scripts/CRAWLER_REFERENCES.md" target="_blank" rel="noopener" style="color:var(--accent)">scripts/CRAWLER_REFERENCES.md</a>';
-    var body = '';
-    if (site === 'jd') {
-      body = '京东列表未在本工具内置。建议：官方/品牌导出、合规插件或自建 Playwright。说明见 ' + linkRef + '。';
-    } else if (site === 'amazon') {
-      body = 'Amazon「类目近 12 月销量 Top100」请以 <strong>卖家精灵、Keepa、内部 BI</strong> 等导出为准，再进入「数据分析」导入；本仓库不提供一键爬全榜。';
-    } else if (site === 'xhs' || site === 'douyin') {
-      body = '小红书 / 抖音请使用 <strong>MediaCrawler</strong> 等项目单独抓取并导出，再导入本工作台。详见 ' + linkRef + '。';
-    } else {
-      body = '详见 ' + linkRef + '。';
-    }
-    if (oh) {
-      oh.style.display = 'block';
-      oh.innerHTML = '<div style="font-size:11px;line-height:1.75;color:var(--text);border:1px solid var(--border2);border-radius:8px;padding:12px;background:var(--surface2)">' + body + '</div>';
-    }
-    log('向导：该站点未生成 shell 命令，请按上方指引取数', 'warn');
-    return;
-  }
-  var tbKw = document.getElementById('tbCrawlKw');
-  if (tbKw) tbKw.value = kw;
-  tbSaveCrawlKeyword();
-  var wantBiz = document.getElementById('occWantBizTop100') && document.getElementById('occWantBizTop100').checked;
-  var cap = parseInt(document.getElementById('occCap') && document.getElementById('occCap').value, 10) || 100;
-  cap = Math.max(20, Math.min(480, cap));
-  if (wantBiz) {
-    var perPage = 48;
-    var pages = Math.max(1, Math.min(15, Math.ceil(cap / perPage)));
-    var spEl = document.getElementById('tbCrawlStart');
-    var epEl = document.getElementById('tbCrawlEnd');
-    if (spEl) spEl.value = 1;
-    if (epEl) epEl.value = String(pages);
-    log('向导：已按约 ' + cap + ' 条搜索列表位估算翻页至第 ' + pages + ' 页（补充样本，≠ 卖家精灵「近12月类目Top100」）', 'warn');
-  }
-  if (site === 'tmall') {
-    log('天猫：请在 crawl_taobao_search.py 内将搜索入口改为天猫搜索 URL 后再运行', 'warn');
-  }
-  tbRefreshTaobaoCmdPreview();
-  var dirEl = document.getElementById('tbCrawlDir');
-  if (dirEl && !String(dirEl.value || '').trim()) tbLoadCrawlDirOnce(dirEl);
-  if (!dirEl || !String(dirEl.value || '').trim()) {
-    log('向导：请先在主卡片填写「脚本目录」', 'warn');
-    closeModal('modalOneClickCrawl');
-    if (dirEl) dirEl.focus();
-    return;
-  }
-  closeModal('modalOneClickCrawl');
-  itCopyTaobaoCrawlCmd();
-}
-
-async function tbWizardGuessCategory() {
-  var kw = (document.getElementById('occKw') && document.getElementById('occKw').value || '').trim();
-  if (!kw) {
-    log('向导：请先填检索词', 'warn');
-    return;
-  }
-  var cfg = getCfg();
-  if (!cfg) {
-    alert('请先配置 AI Provider');
-    return;
-  }
-  var site = (document.getElementById('occSite') && document.getElementById('occSite').value) || 'taobao';
-  var map = { taobao: '淘宝', tmall: '天猫', jd: '京东', amazon: '亚马逊', xhs: '小红书', douyin: '抖音' };
-  var siteZh = map[site] || site;
-  var prompt = '你是电商类目研究助理。根据检索词与站点，推测用户可能想进入的**叶子类目路径**（中文短语即可，不确定用「—」）。\n'
-    + '只返回一个 JSON：{"category_path_guess":"","shop_or_brand_tips":"","note":"非官方类目ID，仅供参考"}\n\n'
-    + '检索词：' + kw + '\n站点：' + siteZh;
-  var out = document.getElementById('occCatOut');
-  if (out) out.value = '请求中…';
-  try {
-    var text;
-    if (cfg.type === 'anthropic' && typeof callAnthropic === 'function') text = await callAnthropic(cfg, prompt);
-    else if (cfg.type === 'gemini' && typeof callGemini === 'function') text = await callGemini(cfg, prompt);
-    else text = await callOpenAI(cfg, prompt);
-    var m = text && (text.match(/```json\s*([\s\S]*?)```/) || text.match(/\{[\s\S]*\}/));
-    if (!m) throw new Error('模型返回无法解析为 JSON');
-    var raw = (m[1] || m[0]).trim();
-    var js = JSON.parse(raw);
-    if (out) out.value = JSON.stringify(js, null, 2);
-    log('向导：类目推测已写入', 'ok');
-  } catch (e) {
-    if (out) out.value = '';
-    alert('类目推测失败：' + (e && e.message));
-  }
-}
+/* 公开 Demo：爬虫 UI 已移除，保留空桩避免旧引用报错 */
+function tbSaveCrawlKeyword() {}
+function tbLoadCrawlKeywordOnce() {}
+function tbPrefillKeywordFromSaved() {}
+function tbLoadCrawlDirOnce() {}
+function tbSaveCrawlDir() {}
+function itBuildTaobaoCrawlCmd() { return ''; }
+function tbRefreshTaobaoCmdPreview() {}
+function itOneClickTaobaoCrawl() {}
+function itOpenOneClickCrawlWizard() {}
+function itApplyOneClickCrawlWizard() {}
+async function tbWizardGuessCategory() {}
+function itCopyTaobaoCrawlCmd() {}
+function itDownloadTaobaoCrawlBat() {}
 function _tbCopyTextNoPrompt(s, okMsg) {
-  function execFallback() {
-    var ta = document.createElement('textarea');
-    ta.value = s;
-    ta.setAttribute('readonly', '');
-    ta.style.position = 'fixed';
-    ta.style.left = '-9999px';
-    document.body.appendChild(ta);
-    ta.select();
-    try {
-      document.execCommand('copy');
-      log(okMsg || '命令已复制到剪贴板', 'ok');
-    } catch (e2) {
-      log('复制未成功，请展开下方命令框手动全选后 Ctrl+C', 'warn');
-    }
-    document.body.removeChild(ta);
-  }
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(s).then(function () { log(okMsg || '命令已复制到剪贴板', 'ok'); }).catch(execFallback);
-  } else {
-    execFallback();
+    navigator.clipboard.writeText(s).then(function () { if (typeof log === 'function') log(okMsg || '已复制', 'ok'); });
   }
-}
-function itCopyTaobaoCrawlCmd() {
-  tbRefreshTaobaoCmdPreview();
-  var t = document.getElementById('tbCrawlCmdPreview');
-  var s = t ? t.value : itBuildTaobaoCrawlCmd();
-  _tbCopyTextNoPrompt(s, '淘宝爬虫命令已复制到剪贴板');
-  var kwEl = document.getElementById('tbCrawlKw');
-  if (kwEl && String(kwEl.value || '').trim()) tbSaveCrawlKeyword();
-}
-function itDownloadTaobaoCrawlBat() {
-  tbRefreshTaobaoCmdPreview();
-  var body = '@echo off\r\nchcp 65001 >nul\r\n' + (document.getElementById('tbCrawlCmdPreview') && document.getElementById('tbCrawlCmdPreview').value ? document.getElementById('tbCrawlCmdPreview').value : itBuildTaobaoCrawlCmd()) + '\r\nif errorlevel 1 pause\r\n';
-  var blob = new Blob(['\ufeff' + body], { type: 'text/plain;charset=utf-8' });
-  downloadBlob('run_taobao_search.bat', blob);
-  log('已下载 run_taobao_search.bat（请保存到可双击的位置，或放入脚本目录）', 'ok');
 }
 function _tbColIdx(headers, patterns) {
   var hh = headers.map(function (h) { return String(h || '').trim().toLowerCase(); });

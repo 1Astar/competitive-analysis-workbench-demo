@@ -1,17 +1,17 @@
 /**
- * 公开 Demo UI 裁剪：只展示核心流程，隐藏爬虫 / AI 配置 / 内部模块。
+ * 公开 Demo UI 裁剪：从 DOM 移除非展示模块（非 display:none）。
  */
 (function (global) {
   'use strict';
 
   if (!global.__DEMO_PUBLIC__) return;
 
-  var HIDDEN_TABS = [
+  var REMOVE_TABS = [
     'import', 'dataanalysis', 'prd', 'quickreq',
     'simulation', 'projectrisk', 'prototype', 'returns'
   ];
 
-  var HIDDEN_IDS = [
+  var REMOVE_IDS = [
     'btnProvider', 'btnDiscover', 'btnAll', 'btnStopAll', 'btnExportPage',
     'btnMatchSource', 'btnMatchSourceAi', 'btnAuditNames', 'btnBulkAiRename',
     'btnBatchSplit', 'btnGenNeeds', 'btnGenReport', 'btnUpdateReport',
@@ -20,48 +20,42 @@
     'toggleWebSearch', 'toggleMarketVerdict'
   ];
 
-  var HIDDEN_SELECTORS = [
+  var REMOVE_SELECTORS = [
     '#reportToolbar a[href="market_verdict.html"]',
-    '#reportToolbar label[for="toggleWebSearch"]',
-    '#reportToolbar label[for="toggleMarketVerdict"]',
     '#reportToolbar button[onclick="saveWorkspaceGlobalNow()"]',
     '#reportToolbar button[onclick="exportReportPDF()"]',
-    '#reportToolbar label:has(#toggleWebSearch)',
-    '#reportToolbar label:has(#toggleMarketVerdict)',
     '#opBar .stat[onclick="cycleCostView()"]',
     '[data-analyze]', '[data-reanalyze]',
     '.link-parse-btn', '.search-btn', '.split-btn'
   ];
 
-  function hideEl(el) {
-    if (el) el.classList.add('demo-public-hidden');
+  function removeEl(el) {
+    if (el && el.parentNode) el.parentNode.removeChild(el);
   }
 
-  function hideById(id) {
-    hideEl(document.getElementById(id));
+  function removeById(id) {
+    removeEl(document.getElementById(id));
   }
 
-  function hideTabs() {
-    HIDDEN_TABS.forEach(function (name) {
-      var btn = document.querySelector('.tab-btn[data-tab="' + name + '"]');
-      var pane = document.getElementById('tab-' + name);
-      hideEl(btn);
-      hideEl(pane);
+  function removeTabs() {
+    REMOVE_TABS.forEach(function (name) {
+      removeEl(document.querySelector('.tab-btn[data-tab="' + name + '"]'));
+      removeEl(document.getElementById('tab-' + name));
     });
     var needsBtn = document.querySelector('.tab-btn[data-tab="needs"]');
     if (needsBtn) needsBtn.textContent = '💬 评论/需求洞察';
   }
 
-  function hideControls() {
-    HIDDEN_IDS.forEach(hideById);
-    HIDDEN_SELECTORS.forEach(function (sel) {
+  function removeControls() {
+    REMOVE_IDS.forEach(removeById);
+    REMOVE_SELECTORS.forEach(function (sel) {
       try {
-        document.querySelectorAll(sel).forEach(hideEl);
+        document.querySelectorAll(sel).forEach(removeEl);
       } catch (_) {}
     });
     document.querySelectorAll('#reportToolbar label').forEach(function (label) {
       var t = label.textContent || '';
-      if (t.indexOf('联网搜索') >= 0 || t.indexOf('市场判定') >= 0) hideEl(label);
+      if (t.indexOf('联网搜索') >= 0 || t.indexOf('市场判定') >= 0) removeEl(label);
     });
   }
 
@@ -126,8 +120,7 @@
 
   function patchDemoIDBRestore() {
     if (global.__demoIdbPatched) return;
-    var orig = global.restoreWorkspaceFromIDB;
-    if (typeof orig !== 'function') return;
+    if (typeof global.restoreWorkspaceFromIDB !== 'function') return;
     global.restoreWorkspaceFromIDB = function () {
       return Promise.resolve(false);
     };
@@ -142,7 +135,6 @@
         var tab = btn.dataset.tab;
         setTimeout(function () {
           syncDemoBanner(tab);
-          hideControls();
           updateCopy();
           if (typeof global.adjustHeaderOffset === 'function') global.adjustHeaderOffset();
         }, 0);
@@ -155,7 +147,7 @@
     if (!cards || cards.__demoPublicObserved) return;
     cards.__demoPublicObserved = true;
     var obs = new MutationObserver(function () {
-      hideControls();
+      removeControls();
     });
     obs.observe(cards, { childList: true, subtree: true });
   }
@@ -163,7 +155,7 @@
   function ensureVisibleTabActive() {
     var activePane = document.querySelector('.tab-pane.active');
     var activeName = activePane && activePane.id ? activePane.id.replace('tab-', '') : '';
-    if (HIDDEN_TABS.indexOf(activeName) >= 0) {
+    if (REMOVE_TABS.indexOf(activeName) >= 0 || !activePane) {
       document.querySelectorAll('.tab-pane').forEach(function (p) { p.classList.remove('active'); });
       document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
       var compPane = document.getElementById('tab-competitive');
@@ -178,8 +170,8 @@
   function applyDemoPublicUI() {
     if (document.body) document.body.classList.add('demo-public');
     patchDemoIDBRestore();
-    hideTabs();
-    hideControls();
+    removeTabs();
+    removeControls();
     ensureVisibleTabActive();
     ensureDemoPresetContent();
     updateCopy();
