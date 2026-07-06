@@ -92,7 +92,8 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans SC',sans-seri
 
 body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 20% 10%,rgba(99,102,241,.06) 0%,transparent 60%),radial-gradient(ellipse 40% 30% at 80% 80%,rgba(236,72,153,.04) 0%,transparent 60%);pointer-events:none;z-index:0;}
 .app{position:relative;z-index:1;padding:var(--header-offset,108px) 28px 28px 28px;box-sizing:border-box;width:100%;}
-.sticky-header{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);padding:0;box-shadow:0 2px 16px rgba(0,0,0,.2);}
+.demo-banner{position:fixed;top:0;left:0;right:0;z-index:110;background:var(--bg);border-bottom:1px solid var(--border)}
+.sticky-header{position:fixed;top:var(--demo-banner-h,0px);left:0;right:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);padding:0;box-shadow:0 2px 16px rgba(0,0,0,.2);}
 .header-inner{padding:10px 20px 0 20px;transition:padding-left .2s;}
 .header-inner.nav-shifted{padding-left:228px;}
 .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-bottom:10px;}
@@ -249,9 +250,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 @media(max-width:560px){.fgrid{grid-template-columns:1fr;}.topbar{flex-direction:column;align-items:flex-start;}}
 </style>
 <style>
-.demo-intro{background:linear-gradient(90deg,rgba(129,140,248,.12),rgba(52,211,153,.06));border-bottom:1px solid var(--border);padding:12px 20px;font-size:13px;line-height:1.75;color:var(--text-dim);max-width:100%}
+.demo-banner.demo-banner-collapsed .demo-highlights{display:none}
+.demo-banner.demo-banner-collapsed .demo-intro{padding-bottom:10px;font-size:12px;line-height:1.55}
+.demo-intro{background:linear-gradient(90deg,rgba(129,140,248,.12),rgba(52,211,153,.06));padding:12px 20px;font-size:13px;line-height:1.75;color:var(--text-dim);max-width:100%}
 .demo-intro strong{color:var(--accent)}
-.demo-highlights{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px 20px;padding:12px 20px 14px;border-bottom:1px solid var(--border);background:var(--surface2);font-size:12px;line-height:1.65;color:var(--text-dim)}
+.demo-highlights{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px 20px;padding:10px 20px 12px;background:var(--surface2);font-size:12px;line-height:1.65;color:var(--text-dim)}
 .demo-highlights h2{font-size:11px;font-family:'Space Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;grid-column:1/-1}
 .demo-highlights ul{margin:0;padding-left:1.1em}
 .demo-highlights li{margin:4px 0}
@@ -260,6 +263,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 </style>
 </head>
 <body>
+<div class="app">
+<div id="demoBanner" class="demo-banner">
 <div class="demo-intro">这是一个用于<strong>产品调研与竞品分析</strong>的工作台 Demo。打开页面即加载 <strong>6 条虚构竞品</strong>（含分析结果），可体验筛选、对比、评论/需求洞察、调研报告浏览，以及 <strong>导出 Excel / Markdown</strong>。本版本为<strong>脱敏公开演示</strong>，不含真实业务数据与 API 调用。</div>
 <section class="demo-highlights" aria-label="项目亮点">
   <h2>项目亮点</h2>
@@ -270,7 +275,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <li><strong>本地优先</strong>：浏览器存储，适合内网演示与快速体验</li>
   </ul>
 </section>
-<div class="app">
+</div>
 <div class="sticky-header">
 <div class="header-inner" id="headerInner">
 <div class="topbar">
@@ -15995,11 +16000,14 @@ setupNavListDragDrop();
 function adjustHeaderOffset() {
   const header = document.querySelector('.sticky-header');
   const app = document.querySelector('.app');
+  const banner = document.getElementById('demoBanner');
   if (!header || !app) return;
+  const bannerH = banner ? banner.getBoundingClientRect().height : 0;
   const h = header.getBoundingClientRect().height;
+  document.documentElement.style.setProperty('--demo-banner-h', bannerH + 'px');
   // 顶部留白加安全余量，避免首张卡片头被 fixed header 遮挡
   document.documentElement.style.setProperty('--header-h', (h + 12) + 'px');
-  document.documentElement.style.setProperty('--header-offset', (h + 24) + 'px');
+  document.documentElement.style.setProperty('--header-offset', (bannerH + h + 24) + 'px');
 }
 adjustHeaderOffset();
 window.addEventListener('resize', adjustHeaderOffset);
