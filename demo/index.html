@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>竞品分析工作台 · 公开演示版</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="js/filter-utils.js"></script>
+<style>
+:root {
+  --bg:#07080d;--surface:#0f1018;--surface2:#171825;--border:#22243a;--border2:#2e3050;
+  --accent:#818cf8;--accent2:#f472b6;--text:#e2e4f0;--dim:#6b7280;--ok:#34d399;--warn:#fbbf24;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.banner{background:linear-gradient(90deg,rgba(129,140,248,.15),rgba(244,114,182,.08));border-bottom:1px solid var(--border);padding:10px 20px;font-size:12px;color:var(--dim);text-align:center}
+.banner strong{color:var(--accent)}
+header{padding:16px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+h1{font-family:'Space Mono',monospace;font-size:20px;background:linear-gradient(120deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.tabs{display:flex;gap:4px;flex-wrap:wrap}
+.tab{padding:8px 14px;border:none;background:transparent;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;font:inherit;font-size:13px}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.panel{display:none;padding:20px 24px 40px;max-width:1200px;margin:0 auto}
+.panel.active{display:block}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;align-items:center}
+.filters input,.filters select{padding:6px 10px;background:var(--surface);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-size:12px}
+.btn{padding:6px 12px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);color:var(--text);cursor:pointer;font-size:12px}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.stats{display:flex;gap:20px;margin-bottom:16px;flex-wrap:wrap}
+.stat-n{font-family:'Space Mono',monospace;font-size:22px;font-weight:700}
+.stat-l{font-size:11px;color:var(--dim)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px}
+.card h3{font-size:14px;margin-bottom:6px}
+.card-meta{font-size:11px;color:var(--dim);margin-bottom:8px}
+.tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(129,140,248,.12);color:var(--accent);margin-right:4px}
+.done{color:var(--ok)}.ready{color:var(--warn)}
+.report-box{background:var(--surface2);border:1px solid var(--border2);border-radius:12px;padding:20px;line-height:1.8;font-size:13px}
+.report-box h2{font-size:16px;margin:16px 0 8px;color:var(--accent)}
+.report-box h2:first-child{margin-top:0}
+footer{text-align:center;padding:24px;font-size:11px;color:var(--dim);border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+<div class="banner"><strong>公开演示版</strong> · 虚构数据 · 不含 API 密钥与完整业务规则 · Copyright © 2026 刘星雨</div>
+<header>
+  <h1>竞品分析工作台</h1>
+  <div class="tabs">
+    <button class="tab active" data-tab="workspace">竞品工作台</button>
+    <button class="tab" data-tab="import">数据整理</button>
+    <button class="tab" data-tab="report">策略报告</button>
+  </div>
+</header>
+
+<section class="panel active" id="panel-workspace">
+  <div class="stats" id="stats"></div>
+  <div class="filters">
+    <input id="search" type="search" placeholder="🔍 搜索竞品名称…">
+    <select id="filterStatus"><option value="">全部状态</option><option value="done">已完成</option><option value="ready">待分析</option></select>
+    <select id="filterMaterial"><option value="">全部材质</option></select>
+    <select id="filterTag"><option value="">全部标签</option></select>
+    <button class="btn" type="button" id="btnReset">重置</button>
+    <button class="btn btn-primary" type="button" id="btnImportMock">导入 Mock 数据</button>
+  </div>
+  <div id="cards"></div>
+</section>
+
+<section class="panel" id="panel-import">
+  <p style="color:var(--dim);font-size:13px;line-height:1.8;margin-bottom:16px">演示版仅展示导入入口。完整版支持 Excel 字段映射、链接解析与批量清洗；生产规则未公开。</p>
+  <div class="card">
+    <h3>支持的演示操作</h3>
+    <p class="card-meta">点击「导入 Mock 数据」加载 <code>demo/data/mock_workspace.json</code></p>
+    <p>字段：竞品名称、平台、链接、功能矩阵、AI 分析字段（演示填充）</p>
+  </div>
+</section>
+
+<section class="panel" id="panel-report">
+  <div class="report-box" id="reportBox"></div>
+</section>
+
+<footer>Copyright © 2026 刘星雨. All rights reserved. 未经许可不得复制、修改、商用或二次分发。</footer>
+
+<script>
+var products = [];
+var FUNC_LABELS = ['自由对话','指令唤醒','情绪反馈','触摸互动','动作/表情','声音识别','APP连接','联网能力'];
+
+function esc(s) {
+  return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function statusLabel(s) {
+  return s === 'done' ? '<span class="done">✓ 完成</span>' : '<span class="ready">待分析</span>';
+}
+
+function refreshFilterOptions() {
+  var matSel = document.getElementById('filterMaterial');
+  var tagSel = document.getElementById('filterTag');
+  var mats = new Set();
+  var tags = new Set();
+  products.forEach(function(p) {
+    (Array.isArray(p.tags) ? p.tags : []).forEach(function(t) {
+      var x = DemoFilterUtils.sanitizeFilterOptionDisplayText(t);
+      if (x) tags.add(x);
+    });
+    var m = p.ai_results && p.ai_results.material;
+    if (m) {
+      String(m).split(/[；;、,，]/).forEach(function(seg) {
+        var x = DemoFilterUtils.sanitizeFilterOptionDisplayText(seg, 64);
+        if (x) mats.add(x);
+      });
+    }
+  });
+  function fill(sel, first, set) {
+    var old = sel.value;
+    sel.innerHTML = '<option value="">' + first + '</option>';
+    Array.from(set).sort().forEach(function(v) {
+      var o = document.createElement('option');
+      o.value = v; o.textContent = v;
+      sel.appendChild(o);
+    });
+    if (Array.from(set).includes(old)) sel.value = old;
+  }
+  fill(matSel, '全部材质', mats);
+  fill(tagSel, '全部标签', tags);
+}
+
+function applyFilters() {
+  var q = document.getElementById('search').value.trim().toLowerCase();
+  var st = document.getElementById('filterStatus').value;
+  var mat = document.getElementById('filterMaterial').value;
+  var tag = document.getElementById('filterTag').value;
+  var visible = 0;
+  document.querySelectorAll('[data-pid]').forEach(function(el) {
+    var p = products.find(function(x) { return String(x.id) === el.getAttribute('data-pid'); });
+    var show = true;
+    if (q && !(p.name || '').toLowerCase().includes(q)) show = false;
+    if (st && p.status !== st) show = false;
+    if (mat && !String((p.ai_results && p.ai_results.material) || '').includes(mat)) show = false;
+    if (tag && !(p.tags || []).includes(tag)) show = false;
+    el.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+  document.getElementById('statVisible').textContent = visible;
+}
+
+function renderCards() {
+  var box = document.getElementById('cards');
+  box.innerHTML = products.map(function(p, i) {
+    var r = p.ai_results || {};
+    var funcs = FUNC_LABELS.filter(function(f) { return p.functions && p.functions[f] === true; }).join('、') || '—';
+    var tagHtml = (p.tags || []).map(function(t) { return '<span class="tag">' + esc(t) + '</span>'; }).join('');
+    return '<div class="card" data-pid="' + p.id + '">'
+      + '<h3>' + (i+1) + '. ' + esc(p.name) + ' ' + statusLabel(p.status) + '</h3>'
+      + '<div class="card-meta">' + esc(p.platform || '') + ' · ' + tagHtml + '</div>'
+      + '<p style="font-size:12px;color:var(--dim);margin-bottom:6px">' + esc(r.core_function || '（待 AI 分析）') + '</p>'
+      + '<p style="font-size:11px;color:var(--dim)">材质：' + esc(r.material || '—') + '</p>'
+      + '<p style="font-size:11px;color:var(--dim)">功能：' + esc(funcs) + '</p>'
+      + '</div>';
+  }).join('');
+  refreshFilterOptions();
+  applyFilters();
+  renderStats();
+  renderReport();
+}
+
+function renderStats() {
+  document.getElementById('stats').innerHTML =
+    '<div><div class="stat-n" id="statTotal">' + products.length + '</div><div class="stat-l">总竞品</div></div>'
+    + '<div><div class="stat-n" id="statVisible">' + products.length + '</div><div class="stat-l">筛选可见</div></div>'
+    + '<div><div class="stat-n">' + products.filter(function(p){return p.status==='done'}).length + '</div><div class="stat-l">已完成</div></div>';
+}
+
+function renderReport() {
+  var done = products.filter(function(p) { return p.status === 'done' && p.ai_results; });
+  var pains = done.map(function(p) { return (p.ai_results.negative_reviews || '').slice(0, 40); }).filter(Boolean);
+  var opps = done.map(function(p) { return (p.ai_results.potential_needs || '').slice(0, 40); }).filter(Boolean);
+  document.getElementById('reportBox').innerHTML =
+    '<h2>策略摘要（Mock 聚合）</h2>'
+    + '<p>基于 ' + done.length + ' 个已完成竞品的演示字段自动拼接，非生产 Prompt 输出。</p>'
+    + '<h2>共性痛点</h2><p>' + esc(pains.join('；') || '—') + '</p>'
+    + '<h2>机会方向</h2><p>' + esc(opps.join('；') || '—') + '</p>';
+}
+
+function loadMock() {
+  fetch('data/mock_workspace.json')
+    .then(function(r) { return r.json(); })
+    .then(function(j) {
+      products = (j.data && j.data.products) || [];
+      renderCards();
+    })
+    .catch(function() { alert('请通过本地 HTTP 服务打开 demo（见 README），或直接双击可能因 CORS 无法 fetch JSON'); });
+}
+
+document.querySelectorAll('.tab').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.tab').forEach(function(b) { b.classList.remove('active'); });
+    document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+  });
+});
+['search','filterStatus','filterMaterial','filterTag'].forEach(function(id) {
+  document.getElementById(id).addEventListener('input', applyFilters);
+  document.getElementById(id).addEventListener('change', applyFilters);
+});
+document.getElementById('btnReset').addEventListener('click', function() {
+  document.getElementById('search').value = '';
+  document.getElementById('filterStatus').value = '';
+  document.getElementById('filterMaterial').value = '';
+  document.getElementById('filterTag').value = '';
+  applyFilters();
+});
+document.getElementById('btnImportMock').addEventListener('click', loadMock);
+loadMock();
+</script>
+</body>
+</html>
