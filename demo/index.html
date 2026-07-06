@@ -251,11 +251,25 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 <style>
 .demo-intro{background:linear-gradient(90deg,rgba(129,140,248,.12),rgba(52,211,153,.06));border-bottom:1px solid var(--border);padding:12px 20px;font-size:13px;line-height:1.75;color:var(--text-dim);max-width:100%}
 .demo-intro strong{color:var(--accent)}
+.demo-highlights{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px 20px;padding:12px 20px 14px;border-bottom:1px solid var(--border);background:var(--surface2);font-size:12px;line-height:1.65;color:var(--text-dim)}
+.demo-highlights h2{font-size:11px;font-family:'Space Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;grid-column:1/-1}
+.demo-highlights ul{margin:0;padding-left:1.1em}
+.demo-highlights li{margin:4px 0}
+.demo-public-hidden{display:none!important}
 .demo-ai-hint{margin:0 0 12px;padding:10px 12px;border-radius:8px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.28);color:var(--warn);font-size:12px;line-height:1.65}
 </style>
 </head>
 <body>
-<div class="demo-intro">这是一个用于<strong>产品调研与竞品分析</strong>的 AI 工作台 Demo，支持竞品导入、评论分析、需求洞察、调研报告生成与 PRD 辅助输出。本版本为<strong>脱敏演示版</strong>，使用 mock 数据展示核心流程；导出 Excel/JSON 可体验，无需配置真实 API Key。</div>
+<div class="demo-intro">这是一个用于<strong>产品调研与竞品分析</strong>的工作台 Demo。打开页面即加载 <strong>6 条虚构竞品</strong>（含分析结果），可体验筛选、对比、评论/需求洞察、调研报告浏览，以及 <strong>导出 Excel / Markdown</strong>。本版本为<strong>脱敏公开演示</strong>，不含真实业务数据与 API 调用。</div>
+<section class="demo-highlights" aria-label="项目亮点">
+  <h2>项目亮点</h2>
+  <ul>
+    <li><strong>单页工作台</strong>：竞品卡片 + 多维筛选 + 功能矩阵，减少 Excel 与收藏夹切换</li>
+    <li><strong>评论/需求洞察</strong>：聚合痛点、机会与优先级，辅助立项汇报</li>
+    <li><strong>调研报告</strong>：结构化 Markdown，支持复制与导出</li>
+    <li><strong>本地优先</strong>：浏览器存储，适合内网演示与快速体验</li>
+  </ul>
+</section>
 <div class="app">
 <div class="sticky-header">
 <div class="header-inner" id="headerInner">
@@ -1560,6 +1574,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 </div>
 
 <script src="js/demo-bootstrap.js"></script>
+<script src="js/demo-public-ui.js"></script>
 <script>
 // ============================================================
 //  CONSTANTS
@@ -16018,6 +16033,7 @@ if (_savedAt) {
   updateStats();
   setTimeout(ensureCompetitiveTopVisible, 40);
 }
+if (typeof applyDemoPublicUI === 'function') applyDemoPublicUI();
 applyOpBarStaticLabels();
 // IndexedDB 作为主存储：异步检查是否有更新版本
 restoreWorkspaceFromIDB(_savedAt).then(function(newAt){
@@ -16027,6 +16043,7 @@ restoreWorkspaceFromIDB(_savedAt).then(function(newAt){
     if (_navOpen) refreshNavPane();
   }
   applyOpBarStaticLabels();
+  if (typeof applyDemoPublicUI === 'function') applyDemoPublicUI();
 });
 
 setTimeout(function() {
