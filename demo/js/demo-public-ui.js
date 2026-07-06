@@ -59,6 +59,34 @@
     });
   }
 
+  var HIGHLIGHTS_SEEN_KEY = 'demo_public_highlights_seen';
+
+  function hookHighlightsModal() {
+    var modal = document.getElementById('modalDemoHighlights');
+    if (!modal || modal.__demoHooked) return;
+    modal.__demoHooked = true;
+    function markSeen() {
+      try { sessionStorage.setItem(HIGHLIGHTS_SEEN_KEY, '1'); } catch (_) {}
+    }
+    modal.querySelectorAll('.modal-close, .modal-actions .btn').forEach(function (btn) {
+      btn.addEventListener('click', markSeen);
+    });
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) markSeen();
+    });
+  }
+
+  function autoShowDemoHighlights() {
+    try {
+      if (sessionStorage.getItem(HIGHLIGHTS_SEEN_KEY)) return;
+    } catch (_) {}
+    setTimeout(function () {
+      if (typeof global.openModal === 'function') {
+        global.openModal('modalDemoHighlights');
+      }
+    }, 500);
+  }
+
   function updateCopy() {
     var brandP = document.querySelector('.brand p');
     if (brandP) brandP.textContent = 'Mock 演示 · 竞品对比 · 需求洞察 · 报告导出';
@@ -177,6 +205,8 @@
     updateCopy();
     hookTabSwitch();
     observeDynamicButtons();
+    hookHighlightsModal();
+    autoShowDemoHighlights();
     if (typeof global.adjustHeaderOffset === 'function') {
       setTimeout(global.adjustHeaderOffset, 80);
     }
